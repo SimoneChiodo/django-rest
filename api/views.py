@@ -1,11 +1,7 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from students.models import Student
 
 def studentsView(request):
-  students = {
-    'id': 1,
-    'name': 'John',
-    'class': 'Computer Science',
-  }
-  
-  return JsonResponse(students)
+  students = Student.objects.all()
+  students_list = list(students.values()) # Trasformo gli studenti in un elenco per convertirli in Json
+  return JsonResponse(students_list, safe=False) # Uso "safe=False" perché non sto passando un dizionario
