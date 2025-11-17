@@ -24,7 +24,7 @@ def studentsView(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # Se i dati sono sbagliati
 
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def studentDetailView(request, pk):
   try:
     student = Student.objects.get(pk=pk)
@@ -41,3 +41,6 @@ def studentDetailView(request, pk):
       serializer.save()
       return Response(serializer.data, status=status.HTTP_200_OK) 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # Se i dati sono sbagliati
+  elif request.method == 'DELETE': 
+    student.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT) 
