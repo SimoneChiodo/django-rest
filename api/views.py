@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from employees.models import Employee
+from rest_framework import mixins, generics
 
 # STUDENTS -------------------------
 # def studentsView(request):
@@ -49,46 +50,58 @@ def studentDetailView(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT) 
 
 # EMPLOYEES -------------------------
-class Employees(APIView):
-  # INDEX
-  def get(self, request):
-    employees = Employee.objects.all()
-    serializer = EmployeeSerializer(employees, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+# class Employees(APIView):
+#   # INDEX
+#   def get(self, request):
+#     employees = Employee.objects.all()
+#     serializer = EmployeeSerializer(employees, many=True)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
   
-  # CREATE
-  def post(self, request):
-    serializer = EmployeeSerializer(data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+#   # CREATE
+#   def post(self, request):
+#     serializer = EmployeeSerializer(data=request.data)
+#     if serializer.is_valid():
+#       serializer.save()
+#       return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class EmployeeDetail(APIView):
-  def get_object(self, pk): #get_object() funziona con la pk
-    try:
-      return Employee.objects.get(pk=pk)
-    except Employee.DoesNotExist:
-      raise Http404
+# class EmployeeDetail(APIView):
+#   def get_object(self, pk): #get_object() funziona con la pk
+#     try:
+#       return Employee.objects.get(pk=pk)
+#     except Employee.DoesNotExist:
+#       raise Http404
   
-  # SHOW
-  def get(self, request, pk):
-    employee = self.get_object(pk)
-    serializer = EmployeeSerializer(employee)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+#   # SHOW
+#   def get(self, request, pk):
+#     employee = self.get_object(pk)
+#     serializer = EmployeeSerializer(employee)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
   
-  # UPDATE
-  def put(self, request, pk):
-    employee = self.get_object(pk)
-    serializer = EmployeeSerializer(employee, data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+#   # UPDATE
+#   def put(self, request, pk):
+#     employee = self.get_object(pk)
+#     serializer = EmployeeSerializer(employee, data=request.data)
+#     if serializer.is_valid():
+#       serializer.save()
+#       return Response(serializer.data, status=status.HTTP_200_OK)
+#     return Response(status=status.HTTP_400_BAD_REQUEST)
   
-  # DELETE
-  def delete(self, request, pk):
-    employee = self.get_object(pk)
-    employee.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+#   # DELETE
+#   def delete(self, request, pk):
+#     employee = self.get_object(pk)
+#     employee.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+  queryset = Employee.objects.all()
+  serializer_class = EmployeeSerializer
+
+  def get(self, request):
+    return self.list(request)
   
+  def post(self, request):
+    return self.create(request)
+  
+class EmployeeDetail(generics.GenericAPIView):
+  pass
