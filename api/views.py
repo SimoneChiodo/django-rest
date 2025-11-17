@@ -49,7 +49,7 @@ def studentDetailView(request, pk):
     student.delete()
     return Response(status=status.HTTP_204_NO_CONTENT) 
 
-# EMPLOYEES -------------------------
+# EMPLOYEES - BASE -------------------------
 # class Employees(APIView):
 #   # INDEX
 #   def get(self, request):
@@ -93,6 +93,8 @@ def studentDetailView(request, pk):
 #     employee.delete()
 #     return Response(status=status.HTTP_204_NO_CONTENT)
 
+# EMPLOYEES - MIXINS -------------------------
+"""
 class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
   queryset = Employee.objects.all()
   serializer_class = EmployeeSerializer
@@ -120,3 +122,14 @@ class EmployeeDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
   # DELETE
   def delete(self, request, pk):
     return self.destroy(request, pk)
+"""
+
+# EMPLOYEES - GENERICS -------------------------
+class Employees(generics.ListAPIView, generics.CreateAPIView):
+  queryset = Employee.objects.all()
+  serializer_class = EmployeeSerializer
+
+class EmployeeDetail(generics.RetrieveAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+  queryset = Employee.objects.all()
+  serializer_class = EmployeeSerializer
+  lookup_field = 'pk'
