@@ -1,10 +1,13 @@
 from django.http import JsonResponse
 from students.models import Student
-from .serializers import StudentSerializer
+from .serializers import StudentSerializer, EmployeeSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from employees.models import Employee
 
+# STUDENTS -------------------------
 # def studentsView(request):
 #   students = Student.objects.all()
 #   students_list = list(students.values()) # Trasformo gli studenti in un elenco per convertirli in Json
@@ -44,3 +47,10 @@ def studentDetailView(request, pk):
   elif request.method == 'DELETE': 
     student.delete()
     return Response(status=status.HTTP_204_NO_CONTENT) 
+
+# EMPLOYEES -------------------------
+class Employees(APIView):
+  def get(self, request):
+    employees = Employee.objects.all()
+    serializer = EmployeeSerializer(employees, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
