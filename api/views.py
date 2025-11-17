@@ -65,15 +65,24 @@ class Employees(APIView):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class EmployeeDetail(APIView):
-  # SHOW
   def get_object(self, pk): #get_object() funziona con la pk
     try:
       return Employee.objects.get(pk=pk)
     except Employee.DoesNotExist:
       raise Http404
   
+  # SHOW
   def get(self, request, pk):
     employee = self.get_object(pk)
     serializer = EmployeeSerializer(employee)
     return Response(serializer.data, status=status.HTTP_200_OK)
+  
+  # UPDATE
+  def put(self, request, pk):
+    employee = self.get_object(pk)
+    serializer = EmployeeSerializer(employee, data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
   
