@@ -15,7 +15,7 @@ def studentsView(request):
   if request.method == 'GET': # GET -----
     students = Student.objects.all()
     serializer = StudentSerializer(students, many=True) # Serializzo gli studenti (many=True è perché passo più di uno studente in una volta)
-    return Response(serializer.data, status=status.HTTP_200_OK) # Uso "safe=False" perché non sto passando un dizionario
+    return Response(serializer.data, status=status.HTTP_200_OK) 
   elif request.method == 'POST': # POST -----
     serializer = StudentSerializer(data=request.data)
     if serializer.is_valid(): # Controllo i dati
@@ -23,3 +23,15 @@ def studentsView(request):
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # Se i dati sono sbagliati
 
+
+@api_view(['GET'])
+def studentDetailView(request, pk):
+  try:
+    student = Student.objects.get(pk=pk)
+  except Student.DoesNotExist:
+    return Response(status=status.HTTP_404_NOT_FOUND)
+  
+  
+  if request.method == 'GET': 
+    serializer = StudentSerializer(student) 
+    return Response(serializer.data, status=status.HTTP_200_OK) 
