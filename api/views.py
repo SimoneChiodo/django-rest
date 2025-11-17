@@ -10,9 +10,16 @@ from rest_framework.decorators import api_view
 #   students_list = list(students.values()) # Trasformo gli studenti in un elenco per convertirli in Json
 #   return JsonResponse(students_list, safe=False) # Uso "safe=False" perché non sto passando un dizionario
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def studentsView(request):
-  if request.method == 'GET':
+  if request.method == 'GET': # GET -----
     students = Student.objects.all()
     serializer = StudentSerializer(students, many=True) # Serializzo gli studenti (many=True è perché passo più di uno studente in una volta)
     return Response(serializer.data, status=status.HTTP_200_OK) # Uso "safe=False" perché non sto passando un dizionario
+  elif request.method == 'POST': # POST -----
+    serializer = StudentSerializer(data=request.data)
+    if serializer.is_valid(): # Controllo i dati
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # Se i dati sono sbagliati
+
