@@ -135,5 +135,6 @@ REST_FRAMEWORK = {
 
   # Filters -----
   'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-  'SEARCH_PARAM': 'q', # Quando faccio una ricerca, il carattere 'q' prende il posto di search dentro all'URL (uso questo tipo di ricerca per i blog)
+  'SEARCH_PARAM': 'q', # Quando faccio una ricerca, il carattere 'q' prende il posto di 'search' dentro all'URL (uso questo tipo di ricerca per i blog)
+  'ORDERING_PARAM': 'o', # Quando faccio una ricerca, il carattere 'o' prende il posto di 'ordering' dentro all'URL (uso questo tipo di ordinamento per i blog)
 }
