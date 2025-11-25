@@ -135,4 +135,5 @@ REST_FRAMEWORK = {
 
   # Filters -----
   'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+  'SEARCH_PARAM': 'q', # Quando faccio una ricerca, il carattere 'q' prende il posto di search dentro all'URL (uso questo tipo di ricerca per i blog)
 }
