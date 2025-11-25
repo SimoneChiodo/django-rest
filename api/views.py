@@ -12,7 +12,7 @@ from blogs.models import Blog, Comment
 from blogs.serializers import BlogSerializer, CommentSerializer
 from .paginations import CustomPagination
 from employees.filters import EmployeeFilter
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 # STUDENTS -------------------------
 # def studentsView(request):
@@ -187,8 +187,9 @@ class EmployeeViewset(viewsets.ModelViewSet):
 class BlogsView(generics.ListCreateAPIView):
   queryset = Blog.objects.all()
   serializer_class = BlogSerializer
-  filter_backends = [SearchFilter]
-  search_fields = ['blog_title'] # Basta che contenga il valore ed è anche Case-Unsensitive
+  filter_backends = [SearchFilter, OrderingFilter]
+  search_fields = ['blog_title'] # Basta che contenga il valore ed è anche Case-Unsensitive.  ---  Se voglio ricevere solo i titoli che iniziano con il mio parametro basta aggiungere ^ (esempio: ['^blog_title'])
+  ordering_fields = ['id', 'blog_title']
 
 class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
   queryset = Blog.objects.all()
